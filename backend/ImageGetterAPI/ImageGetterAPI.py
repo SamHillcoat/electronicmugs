@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from DigikeyImageFinder import DigikeyImageFinder
+from backend.ImageGetterAPI.DigikeyImageFinder import DigikeyImageFinder
 import uvicorn
 
 app = FastAPI()
@@ -14,8 +14,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/part-image")
+@app.get("/part-image")
 def get_part_image(mpn: str = Query(...)):
+    image_finder = DigikeyImageFinder()
     part_info = image_finder.get_part_image(mpn)
     print(part_info)
     if part_info['image_url']:
@@ -25,5 +26,5 @@ def get_part_image(mpn: str = Query(...)):
 
 
 if __name__ == "__main__":
-    image_finder = DigikeyImageFinder()
+
     uvicorn.run(app, host="0.0.0.0", port=8001)

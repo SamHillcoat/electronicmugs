@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from ImageGetterAPI import app as ImageGetterApp
-from image_tools.MockupApi import app as mockupApiApp
+from backend.ImageGetterAPI import app as ImageGetterApp
+from backend.MockupAPI import app as mockupApiApp
 
 api = FastAPI()
 

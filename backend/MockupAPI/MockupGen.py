@@ -2,6 +2,8 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import numpy as np
 
+
+DEFAULT_FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 def remove_white_background(img: Image.Image, threshold=240) -> Image.Image:
     """
     Converts white-ish background to transparent in an RGBA image.
@@ -22,7 +24,7 @@ def remove_white_background(img: Image.Image, threshold=240) -> Image.Image:
     # Create new image
     return Image.fromarray(data, mode="RGBA")
 
-def add_text_to_image(image: Image.Image, text: str, font_path="arial.ttf", font_size=60, padding=60) -> Image.Image:
+def add_text_to_image(image: Image.Image, text: str, font_path=DEFAULT_FONT_PATH, font_size=60, padding=60) -> Image.Image:
     try:
         font = ImageFont.truetype(font_path, font_size)
     except IOError:

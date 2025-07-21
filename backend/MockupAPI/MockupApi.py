@@ -1,5 +1,5 @@
 from pydantic_core import Url
-from MockupGen import generate_mug_mockup
+from .MockupGen import generate_mug_mockup
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -20,7 +20,7 @@ app.add_middleware(
 )
 
 
-@app.post("/api/mockup")
+@app.post("/mockup")
 async def create_mockup(image: UploadFile = File(...), text: str = Form(...)):
     image_bytes = await image.read()
 
@@ -31,7 +31,7 @@ async def create_mockup(image: UploadFile = File(...), text: str = Form(...)):
     
     return StreamingResponse(img_bytes, media_type="image/png")
 
-@app.post("/api/mockupurl")
+@app.post("/mockupurl")
 async def create_mockup(image_url: str = Form(...), text: str = Form(...)):
     try:
         # Download the image from the provided URL
@@ -51,7 +51,7 @@ async def create_mockup(image_url: str = Form(...), text: str = Form(...)):
         raise HTTPException(status_code=400, detail=f"Invalid image: {str(e)}")
 
     # Generate mug mockup (your existing function)
-    img_bytes = generate_mug_mockup(user_img, 'backend/image_tools/mug_base.png', text)
+    img_bytes = generate_mug_mockup(user_img, 'backend/MockupAPI/mug_base.png', text)
 
     return StreamingResponse(img_bytes, media_type="image/png")
 

@@ -1,0 +1,1 @@
+from .ImageGetterAPI import app
