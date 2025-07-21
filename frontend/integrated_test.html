@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Mug Mockup Generator</title></head>
+<body>
+
+<h2>Enter Part Number</h2>
+<input type="text" id="mpnInput" placeholder="e.g. STM32H750VBT6" />
+<button onclick="generateMockup()">Generate Mug Mockup</button>
+
+<div id="mockupContainer" style="margin-top:20px;"></div>
+
+<script>
+  async function generateMockup() {
+    const mpn = document.getElementById("mpnInput").value.trim();
+    if (!mpn) {
+      alert("Please enter a part number");
+      return;
+    }
+
+    // 1. Fetch part image URL from backend
+    const partRes = await fetch(`/api/parts/part-image?mpn=${encodeURIComponent(mpn)}`);
+    const partData = await partRes.json();
+    if (!partData.image_url) {
+      alert("Part image not found");
+      return;
+    }
+
+
+    // 3. Prepare form data to send to mockup endpoint
+    const formData = new FormData();
+    formData.append("image_url", partData.image_url);
+    formData.append("text", mpn);
+
+    // 4. POST to backend mockup API
+    const mockupRes = await fetch("/api/mockup/mockupurl", {
+      method: "POST",
+      body: formData
+    });
+
+    if (!mockupRes.ok) {
+      alert("Error generating mockup");
+      return;
+    }
+
+    // 5. Get mockup image blob and display it
+    const mockupBlob = await mockupRes.blob();
+    const url = URL.createObjectURL(mockupBlob);
+
+    const container = document.getElementById("mockupContainer");
+    container.innerHTML = `<h3>Mockup for ${mpn}</h3><img src="${url}" style="max-width:400px;"/>`;
+  }
+</script>
+
+</body>
+</html>

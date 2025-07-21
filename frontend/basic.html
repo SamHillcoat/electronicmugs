@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Part Image Finder</title>
+</head>
+<body>
+  <h2>Enter Manufacturer Part Number</h2>
+  <input id="mpnInput" type="text" placeholder="e.g. STM32H750VBT6">
+  <button onclick="fetchImage()">Search</button>
+  <div id="imageContainer"></div>
+
+  <script>
+    async function fetchImage() {
+      const mpn = document.getElementById("mpnInput").value;
+      const response = await fetch(`http://localhost:8000/api/part-image?mpn=${encodeURIComponent(mpn)}`);
+      const data = await response.json();
+
+      const container = document.getElementById("imageContainer");
+      container.innerHTML = "";
+
+      if (data.image_url) {
+        const img = document.createElement("img");
+        img.src = data.image_url;
+        img.alt = mpn;
+        img.style.maxWidth = "300px";
+        container.appendChild(img);
+      } else {
+        container.textContent = "Image not found.";
+      }
+    }
+  </script>
+</body>
+</html>
